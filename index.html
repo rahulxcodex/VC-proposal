@@ -1,0 +1,1416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nishaa's Magical Fairytale Journey</title>
+    <!-- Tailwind CSS for modern layout utilities -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts for Disney-style romantic typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght=700&family=Playfair+Display:ital,wght=0,400;0,700;1,400&family=Quicksand:wght=400;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for romantic/fairytale icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- GSAP for ultra-smooth animations and horizontal ScrollTrigger -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background-color: #05020c;
+            color: #f3f0ff;
+            overflow-x: hidden;
+            overflow-y: hidden; /* Prevent scrolling before game starts */
+        }
+        #scroll-container {
+            position: relative;
+            width: 100%;
+            height: 900vh; /* Smooth, extended vertical scrolling track */
+            overflow: hidden;
+        }
+        h1, h2, h3, .font-fairytale {
+            font-family: 'Dancing Script', cursive;
+        }
+        .font-serif-elegant {
+            font-family: 'Playfair Display', serif;
+        }
+        /* Custom hide scrollbar */
+        ::-webkit-scrollbar {
+            display: none;
+        }
+        .magic-glow {
+            box-shadow: 0 0 20px rgba(236, 72, 153, 0.4), 0 0 40px rgba(168, 85, 247, 0.2);
+        }
+        .gold-glow {
+            text-shadow: 0 0 10px rgba(253, 224, 71, 0.8), 0 0 20px rgba(234, 179, 8, 0.4);
+        }
+        .glassmorphism {
+            background: rgba(15, 10, 28, 0.65);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        /* Polaroid floating animation */
+        @keyframes gentleSway {
+            0%, 100% { transform: translateY(0) rotate(-2deg); }
+            50% { transform: translateY(-10px) rotate(2deg); }
+        }
+        .polaroid-card {
+            animation: gentleSway 6s ease-in-out infinite;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .polaroid-card:hover {
+            transform: scale(1.08) rotate(0deg) translateY(-15px) !important;
+            box-shadow: 0 15px 35px rgba(168, 85, 247, 0.5);
+            z-index: 10;
+        }
+        .pulse-heart {
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.9; }
+            50% { transform: scale(1.15); opacity: 1; filter: drop-shadow(0 0 12px #ef4444); }
+        }
+        /* Glowing particle trail class */
+        .sparkle-trail {
+            position: absolute;
+            pointer-events: none;
+            background: radial-gradient(circle, rgba(253,224,71,1) 0%, rgba(253,224,71,0) 70%);
+            border-radius: 50%;
+            z-index: 9999;
+        }
+        .animate-spin-slow {
+            animation: spin 8s linear infinite;
+        }
+        /* Maze joystick controller container */
+        .maze-control-btn {
+            background: rgba(147, 51, 234, 0.3);
+            border: 1px solid rgba(236, 72, 153, 0.4);
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 9999px;
+            color: #fbcfe8;
+            transition: all 0.2s;
+        }
+        .maze-control-btn:active {
+            background: rgba(236, 72, 153, 0.6);
+            transform: scale(0.9);
+        }
+    </style>
+</head>
+<body class="relative">
+
+    <!-- Global Background Particle Canvas (Fireflies, Stars, Falling Petals) -->
+    <canvas id="magicCanvas" class="fixed top-0 left-0 w-full h-full pointer-events-none z-0"></canvas>
+
+    <!-- CUSTOM FLOATING MESSAGE ALERTS (Replaces default alerts for Disney immersion) -->
+    <div id="toast-container" class="fixed top-20 right-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- LOADING SCREEN / INTRO MENU -->
+    <div id="loader" class="fixed inset-0 z-50 bg-[#05020c] flex flex-col items-center justify-center text-center px-4">
+        <div class="relative mb-8">
+            <div class="w-24 h-24 rounded-full bg-gradient-to-tr from-pink-500 via-purple-600 to-indigo-700 animate-spin flex items-center justify-center p-1">
+                <div class="w-full h-full bg-[#05020c] rounded-full flex items-center justify-center">
+                    <i class="fa-solid fa-wand-magic-sparkles text-pink-400 text-3xl animate-bounce"></i>
+                </div>
+            </div>
+            <div class="absolute -top-2 -right-2 text-yellow-300 text-xl animate-ping"><i class="fa-solid fa-star"></i></div>
+            <div class="absolute -bottom-1 -left-1 text-pink-400 text-lg animate-pulse"><i class="fa-solid fa-heart"></i></div>
+        </div>
+        <h1 class="text-4xl md:text-5xl font-fairytale text-transparent bg-clip-text bg-gradient-to-r from-pink-300 via-purple-300 to-yellow-200 mb-2 gold-glow">Nishaa's Storybook</h1>
+        <p class="text-purple-300 text-sm md:text-base max-w-xs animate-pulse tracking-wide font-light mb-6">Whispering to the wind, gathering stardust...</p>
+        
+        <button id="unlock-btn" class="px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 rounded-full text-white font-bold shadow-lg magic-glow transition duration-300 transform hover:scale-105 active:scale-95 z-50">
+            Start Adventure 💫
+        </button>
+    </div>
+
+    <!-- AUDIO SOUNDTRACK TOGGLE -->
+    <div class="fixed top-4 right-4 z-40 flex items-center gap-2">
+        <button id="audio-toggle" class="w-11 h-11 rounded-full bg-purple-950/80 border border-pink-500/30 flex items-center justify-center text-pink-400 transition hover:bg-purple-900 active:scale-95 glassmorphism">
+            <i id="music-icon" class="fa-solid fa-music text-lg animate-pulse"></i>
+        </button>
+    </div>
+
+    <!-- HUD STATE BAR (Collected Hearts Tracker & Instructions) -->
+    <div class="fixed top-4 left-4 z-40 flex flex-col md:flex-row items-start md:items-center gap-3 pointer-events-none">
+        <div class="glassmorphism rounded-full px-4 py-2 flex items-center gap-2 border border-yellow-500/20 shadow-md pointer-events-auto">
+            <span class="text-xs text-purple-300 tracking-wider uppercase font-semibold">Hearts Found:</span>
+            <div class="flex gap-1.5" id="heart-meter">
+                <i class="fa-regular fa-heart text-pink-400" id="meter-heart-1"></i>
+                <i class="fa-regular fa-heart text-pink-400" id="meter-heart-2"></i>
+                <i class="fa-regular fa-heart text-pink-400" id="meter-heart-3"></i>
+            </div>
+            <!-- Secret shortcut key -->
+            <button onclick="openSecretModal()" class="ml-2 text-yellow-300/40 hover:text-yellow-300 transition text-xs" title="Enter Secret Code">
+                <i class="fa-solid fa-key"></i>
+            </button>
+        </div>
+        <div class="glassmorphism rounded-full px-4 py-1.5 text-xs text-purple-200 border border-pink-500/10 shadow-sm hidden md:block">
+            <i class="fa-solid fa-circle-info text-pink-400 mr-1.5"></i> Scroll or swipe to advance Nishaa's character!
+        </div>
+    </div>
+
+    <!-- MAIN SCROLL CONTAINER -->
+    <div id="scroll-container">
+        
+        <!-- HORIZONTAL SCROLL STORY WRAPPER -->
+        <div id="story-wrapper" class="fixed top-0 left-0 h-screen w-[900vw] flex overflow-hidden">
+            
+            <!-- SCENE 1: THE BEGINNING -->
+            <section id="scene-1" class="scene relative w-screen h-screen flex-shrink-0 flex flex-col justify-center px-6 md:px-24 bg-gradient-to-r from-[#05020c] to-[#0e071e] overflow-hidden z-20">
+                <div class="absolute inset-0 bg-[radial-gradient(circle_at_20%_30%,rgba(168,85,247,0.15),transparent_60%)]"></div>
+                <div class="max-w-2xl z-20 relative transform translate-y-10 opacity-0" id="scene1-text">
+                    <span class="text-yellow-300 text-lg uppercase tracking-widest font-semibold block mb-2"><i class="fa-solid fa-sparkles mr-2 animate-spin"></i> Level 1: The Magic Awakens</span>
+                    <h2 class="text-5xl md:text-7xl font-fairytale text-transparent bg-clip-text bg-gradient-to-r from-pink-300 via-purple-300 to-yellow-200 mb-6 drop-shadow-lg leading-tight">
+                        Once upon a time...
+                    </h2>
+                    <p class="text-xl md:text-2xl text-purple-200 font-serif-elegant italic leading-relaxed mb-4">
+                        There was a beautiful princess named <span class="text-pink-300 font-semibold underline decoration-wavy decoration-yellow-300 underline-offset-8">Princess Nishaa</span>.
+                    </p>
+                    <p class="text-lg md:text-xl text-purple-300/80 tracking-wide">
+                        She brought sunshine into the darkest rooms, unaware that someone was smiling at their screen, simply happy that she was in the world.
+                    </p>
+                    <div class="mt-8 flex items-center gap-3 text-purple-400/60 animate-pulse text-sm">
+                        <span>Scroll or swipe down to start her quest</span>
+                        <i class="fa-solid fa-chevron-right text-xs animate-bounce"></i>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SCENE 2: QUEST 1 - CATCH THE SPARKS -->
+            <section id="scene-2" class="scene relative w-screen h-screen flex-shrink-0 flex items-center justify-between px-6 md:px-24 bg-gradient-to-r from-[#0e071e] to-[#18092d] overflow-hidden z-20">
+                <div class="absolute inset-0 bg-[radial-gradient(circle_at_70%_20%,rgba(236,72,153,0.12),transparent_50%)]"></div>
+                <div class="grid grid-cols-1 md:grid-cols-2 w-full max-w-6xl items-center gap-12 z-20">
+                    <div class="space-y-6 opacity-0 transform translate-y-10" id="scene2-text">
+                        <span class="text-xs px-2.5 py-1 rounded-full bg-pink-500/10 text-pink-300 border border-pink-500/20 font-bold uppercase tracking-wider"><i class="fa-solid fa-gamepad mr-1"></i> Side Quest 1</span>
+                        <h2 class="text-5xl md:text-7xl font-fairytale text-pink-300 mb-2 gold-glow">Catch the Sparks!</h2>
+                        <p class="text-lg text-purple-200 leading-relaxed font-serif-elegant italic">
+                            "A simple hello became my favorite notification."
+                        </p>
+                        <p class="text-sm text-purple-300 leading-relaxed">
+                            To unlock the first Memory Heart, tap the floating chat bubble notifications as they drift across the sky before they disappear!
+                        </p>
+                        <!-- Score Display -->
+                        <div class="flex items-center gap-4 text-sm font-bold text-yellow-300">
+                            <span>Sparks Cleared: <span id="spark-count" class="text-xl text-white">0</span> / 4</span>
+                        </div>
+                    </div>
+
+                    <!-- Minigame Playground -->
+                    <div id="sparks-game-area" class="relative w-full h-80 md:h-96 rounded-3xl glassmorphism border border-purple-500/20 overflow-hidden flex items-center justify-center">
+                        <button onclick="startSparksMinigame()" id="start-sparks-btn" class="px-5 py-2.5 bg-pink-600 hover:bg-pink-500 text-white font-bold rounded-full transition transform hover:scale-105 active:scale-95 shadow-md">
+                            Tap to Begin Quest 🎯
+                        </button>
+                        
+                        <!-- The collectable heart spawns inside here after win -->
+                        <div id="collect-heart-1" class="absolute hidden opacity-0 w-20 h-20 rounded-full bg-pink-500/20 border border-pink-500/60 flex flex-col items-center justify-center cursor-pointer transition transform hover:scale-125 z-30 group" onclick="collectHeart(1)">
+                            <i class="fa-solid fa-heart text-4xl text-pink-500 pulse-heart"></i>
+                            <span class="text-[9px] text-pink-200 mt-1 uppercase font-bold tracking-widest animate-pulse">Claim Heart</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SCENE 3: QUEST 2 - THE MELODY IN THE GARDEN -->
+            <section id="scene-3" class="scene relative w-screen h-screen flex-shrink-0 flex flex-col justify-center px-6 md:px-24 bg-gradient-to-r from-[#18092d] to-[#250a3b] overflow-hidden z-20">
+                <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_80%,rgba(168,85,247,0.18),transparent_50%)]"></div>
+                
+                <div class="max-w-4xl z-20 space-y-4 mb-6">
+                    <span class="text-xs px-2.5 py-1 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30 font-bold uppercase tracking-wider"><i class="fa-solid fa-gamepad mr-1"></i> Side Quest 2</span>
+                    <h2 class="text-5xl md:text-7xl font-fairytale text-pink-300 gold-glow">Garden Melody Memory</h2>
+                    <p class="text-md md:text-lg text-purple-200 leading-relaxed">
+                        Our memories blossomed like beautiful flowers. Play the flowers in the exact glowing order they illuminate to hear their magic music and win the second heart!
+                    </p>
+                </div>
+
+                <!-- Interactive Game Flower Board -->
+                <div class="flex flex-col items-center w-full max-w-4xl mx-auto z-20 gap-4">
+                    <div class="grid grid-cols-3 w-full gap-4 md:gap-8">
+                        <!-- Flower 0 (Rose) -->
+                        <div id="game-flower-0" onclick="handleFlowerClick(0)" class="group cursor-pointer flex flex-col items-center justify-center p-4 rounded-xl glassmorphism border border-pink-500/20 transition duration-300 h-32 md:h-40">
+                            <div class="w-16 h-16 rounded-full bg-pink-600/20 flex items-center justify-center text-pink-400 group-hover:text-pink-300 transition text-3xl mb-2 border border-pink-500/30 shadow-inner magic-glow">
+                                <i class="fa-solid fa-spa"></i>
+                            </div>
+                            <span class="text-pink-300 text-xs font-semibold uppercase tracking-wider">Golden Rose</span>
+                        </div>
+
+                        <!-- Flower 1 (Lotus) -->
+                        <div id="game-flower-1" onclick="handleFlowerClick(1)" class="group cursor-pointer flex flex-col items-center justify-center p-4 rounded-xl glassmorphism border border-purple-500/20 transition duration-300 h-32 md:h-40">
+                            <div class="w-16 h-16 rounded-full bg-purple-600/20 flex items-center justify-center text-purple-400 group-hover:text-purple-300 transition text-3xl mb-2 border border-purple-500/30 shadow-inner magic-glow">
+                                <i class="fa-solid fa-clover animate-pulse"></i>
+                            </div>
+                            <span class="text-purple-300 text-xs font-semibold uppercase tracking-wider">Night Lotus</span>
+                        </div>
+
+                        <!-- Flower 2 (Lily) -->
+                        <div id="game-flower-2" onclick="handleFlowerClick(2)" class="group cursor-pointer flex flex-col items-center justify-center p-4 rounded-xl glassmorphism border border-yellow-500/20 transition duration-300 h-32 md:h-40">
+                            <div class="w-16 h-16 rounded-full bg-yellow-600/20 flex items-center justify-center text-yellow-400 group-hover:text-yellow-300 transition text-3xl mb-2 border border-yellow-500/30 shadow-inner gold-glow">
+                                <i class="fa-solid fa-fan animate-spin-slow"></i>
+                            </div>
+                            <span class="text-yellow-300 text-xs font-semibold uppercase tracking-wider">Star Lily</span>
+                        </div>
+                    </div>
+
+                    <!-- Level status & start triggers -->
+                    <div class="flex gap-4 mt-2">
+                        <button onclick="startGardenMelodyQuest()" id="start-garden-btn" class="px-5 py-2 bg-pink-600 hover:bg-pink-500 font-bold rounded-lg transition active:scale-95 text-xs text-white">
+                            Watch & Listen 🎧
+                        </button>
+                        <div class="px-4 py-2 glassmorphism rounded-lg text-xs font-semibold text-yellow-300 flex items-center">
+                            Sequence Left: <span id="seq-remaining" class="ml-1 text-white text-sm">--</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SCENE 4: QUEST 3 - MAZE OF THOUGHTS -->
+            <section id="scene-4" class="scene relative w-screen h-screen flex-shrink-0 flex items-center justify-center px-6 md:px-24 bg-gradient-to-r from-[#250a3b] to-[#120524] overflow-hidden z-20">
+                <div class="absolute inset-0 bg-[radial-gradient(circle_at_10%_80%,rgba(59,130,246,0.1),transparent_50%)]"></div>
+                <div class="grid grid-cols-1 md:grid-cols-2 w-full max-w-6xl items-center gap-12 z-20">
+                    <div class="space-y-6 opacity-0 transform translate-y-10" id="scene4-text">
+                        <span class="text-xs px-2.5 py-1 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 font-bold uppercase tracking-wider"><i class="fa-solid fa-gamepad mr-1"></i> Side Quest 3</span>
+                        <h2 class="text-5xl md:text-7xl font-fairytale text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 via-purple-300 to-pink-300 leading-tight">
+                            The Labyrinth
+                        </h2>
+                        <p class="text-lg text-purple-200">
+                            "A thousand thoughts, a million feelings... yet, every single path inside my heart always leads to one exact destination: you."
+                        </p>
+                        
+                        <!-- Game Controller Pad for Maze -->
+                        <div class="p-4 rounded-xl glassmorphism border border-indigo-500/20 max-w-xs relative z-30">
+                            <p class="text-xs text-indigo-300 mb-3 text-center"><i class="fa-solid fa-arrows-to-dot mr-1"></i> Use controllers below to align the cosmic portals!</p>
+                            <div class="flex justify-center gap-2">
+                                <button onclick="rotateMazePortal(-1)" class="maze-control-btn hover:text-white pointer-events-auto"><i class="fa-solid fa-arrow-rotate-left"></i></button>
+                                <button onclick="alignPortalConfirm()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-full font-bold text-xs text-white pointer-events-auto">Match Portals ✨</button>
+                                <button onclick="rotateMazePortal(1)" class="maze-control-btn hover:text-white pointer-events-auto"><i class="fa-solid fa-arrow-rotate-right"></i></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Canvas-styled SVG Maze -->
+                    <div class="relative flex flex-col items-center justify-center">
+                        <div class="relative w-72 h-72 md:w-80 md:h-80 flex items-center justify-center z-20">
+                            <!-- Rotating outer cosmic portal -->
+                            <div id="outer-portal" class="absolute inset-0 border-4 border-dashed border-indigo-500/50 rounded-full flex items-center justify-center transition-all duration-300">
+                                <div class="absolute top-2 w-6 h-6 bg-pink-500 rounded-full flex items-center justify-center text-[10px] text-white font-bold"><i class="fa-solid fa-sparkles"></i></div>
+                            </div>
+                            
+                            <!-- Middle target ring -->
+                            <div class="absolute w-4/5 h-4/5 border-2 border-dashed border-purple-500/40 rounded-full flex items-center justify-center">
+                                <div class="absolute bottom-2 w-6 h-6 bg-indigo-500 rounded-full flex items-center justify-center text-[10px] text-white"><i class="fa-solid fa-star"></i></div>
+                            </div>
+
+                            <!-- Core Inner Gate -->
+                            <div id="inner-gate" class="absolute w-2/5 h-2/5 rounded-full flex items-center justify-center bg-indigo-950/60 shadow-inner border-2 border-pink-500/20">
+                                <!-- COLLECTABLE HEART 2 -->
+                                <div id="collect-heart-2" class="w-16 h-16 rounded-full bg-indigo-500/20 border border-indigo-500/60 flex items-center justify-center cursor-pointer transition transform scale-0 z-30 group pointer-events-auto" onclick="collectHeart(2)">
+                                    <i class="fa-solid fa-heart text-3xl text-indigo-500 pulse-heart"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SCENE 5: BRIDGE OF STARS -->
+            <section id="scene-5" class="scene relative w-screen h-screen flex-shrink-0 flex flex-col justify-center px-6 md:px-24 bg-gradient-to-r from-[#120524] to-[#040215] overflow-hidden z-20">
+                <div class="absolute right-12 md:right-32 top-10 w-48 h-48 md:w-80 md:h-80 rounded-full bg-gradient-to-br from-yellow-100 to-amber-200/20 opacity-30 blur-sm z-0"></div>
+                <div class="absolute right-12 md:right-32 top-10 w-48 h-48 md:w-80 md:h-80 rounded-full bg-yellow-200/10 z-0"></div>
+
+                <div class="max-w-4xl z-20 space-y-6">
+                    <span class="text-yellow-300 text-lg uppercase tracking-widest font-semibold block mb-2"><i class="fa-solid fa-moon mr-2"></i> Celestial Bridge</span>
+                    <h2 class="text-5xl md:text-7xl font-fairytale text-purple-200 leading-none">The Bridge of Stars</h2>
+                    
+                    <div class="space-y-6 text-xl md:text-3xl font-serif-elegant italic text-purple-300/90 pt-4" id="scene5-text">
+                        <p class="scene5-p opacity-0">"Every late night conversation..."</p>
+                        <p class="scene5-p opacity-0">"Every silly shared laugh..."</p>
+                        <p class="scene5-p opacity-0">"Every single fleeting moment..."</p>
+                        <p class="scene5-p opacity-0 text-pink-300 gold-glow font-bold">"...brought my soul closer to yours."</p>
+                    </div>
+                </div>
+
+                <div class="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-purple-500/10 to-transparent border-t border-yellow-500/20 flex justify-around items-end pb-2">
+                    <div class="w-2 h-2 rounded-full bg-yellow-300/40 animate-ping"></div>
+                    <div class="w-3 h-3 rounded-full bg-pink-400/30 animate-pulse"></div>
+                    <div class="w-2 h-2 rounded-full bg-indigo-300/40 animate-ping"></div>
+                </div>
+            </section>
+
+            <!-- SCENE 6: UPGRADED MEMORY GALLERY (Custom Images img1-img3) -->
+            <section id="scene-6" class="scene relative w-screen h-screen flex-shrink-0 flex flex-col justify-center px-6 md:px-24 bg-gradient-to-r from-[#040215] to-[#0c0316] overflow-hidden z-20">
+                <div class="absolute inset-0 bg-[radial-gradient(circle_at_90%_10%,rgba(236,72,153,0.1),transparent_50%)]"></div>
+                <div class="max-w-4xl z-20 space-y-4 mb-4">
+                    <h2 class="text-5xl md:text-7xl font-fairytale text-pink-300 gold-glow">Our Memory Lane</h2>
+                    <p class="text-md md:text-lg text-purple-200">
+                        A cozy collection of our moments frozen in eternal polaroids. Click on any card to zoom in and experience the memory in full depth.
+                    </p>
+                </div>
+
+                <!-- Horizontal gallery row - SNAP SCROLLER WITH MARGIN BREEDING FOR LAST CARD visibility -->
+                <div class="flex flex-nowrap gap-6 md:gap-12 overflow-x-auto py-6 px-4 pr-16 md:pr-32 z-20 max-w-6xl w-full snap-x snap-mandatory" id="polaroids-container">
+                    <!-- Polaroid Card 1 -->
+                    <div onclick="zoomPolaroid('img1.jpg', 'Our First Chat Sparks', 'The simple message that completely transformed ordinary nights into absolute fairytales.')" class="polaroid-card snap-center flex-shrink-0 w-56 md:w-64 bg-slate-100 p-3 pb-6 rounded shadow-2xl transform -rotate-3 text-gray-800 cursor-pointer">
+                        <div class="w-full h-40 md:h-48 bg-purple-950 rounded mb-3 overflow-hidden relative border border-slate-300">
+                            <!-- Image loads with custom fallback -->
+                            <img src="img1.jpg" onerror="this.src='https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=500&auto=format&fit=crop';" class="w-full h-full object-cover">
+                            <span class="absolute top-2 right-2 bg-black/60 text-[10px] text-pink-300 px-2 py-0.5 rounded-full font-bold">Zoom 🔍</span>
+                        </div>
+                        <h3 class="font-fairytale text-xl text-center text-indigo-950 font-bold">Midnight Dreams</h3>
+                        <p class="text-[10px] text-center text-gray-500 mt-1 italic">"When the universe sleeps, we find each other."</p>
+                    </div>
+
+                    <!-- Polaroid Card 2 -->
+                    <div onclick="zoomPolaroid('img2.jpg', 'That Gorgeous Smile', 'The melody of your laugh remains my favorite song in the whole world.')" class="polaroid-card snap-center flex-shrink-0 w-56 md:w-64 bg-slate-100 p-3 pb-6 rounded shadow-2xl transform rotate-2 text-gray-800 cursor-pointer" style="animation-delay: -1.5s;">
+                        <div class="w-full h-40 md:h-48 bg-pink-950 rounded mb-3 overflow-hidden relative border border-slate-300">
+                            <img src="img2.jpg" onerror="this.src='https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=500&auto=format&fit=crop';" class="w-full h-full object-cover">
+                            <span class="absolute top-2 right-2 bg-black/60 text-[10px] text-pink-300 px-2 py-0.5 rounded-full font-bold">Zoom 🔍</span>
+                        </div>
+                        <h3 class="font-fairytale text-xl text-center text-rose-900 font-bold">Your Sweet Laugh</h3>
+                        <p class="text-[10px] text-center text-gray-500 mt-1 italic">"The sweetest melody in this world."</p>
+                    </div>
+
+                    <!-- Polaroid Card 3 -->
+                    <div onclick="zoomPolaroid('img3.jpg', 'The Late Night 3AM Chronicles', 'Lost in whispers and dreams, talking about anything and everything.')" class="polaroid-card snap-center flex-shrink-0 w-56 md:w-64 bg-slate-100 p-3 pb-6 rounded shadow-2xl transform -rotate-1 text-gray-800 cursor-pointer" style="animation-delay: -3s;">
+                        <div class="w-full h-40 md:h-48 bg-slate-900 rounded mb-3 overflow-hidden relative border border-slate-300">
+                            <img src="img3.jpg" onerror="this.src='https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500&auto=format&fit=crop';" class="w-full h-full object-cover">
+                            <span class="absolute top-2 right-2 bg-black/60 text-[10px] text-pink-300 px-2 py-0.5 rounded-full font-bold">Zoom 🔍</span>
+                        </div>
+                        <h3 class="font-fairytale text-xl text-center text-purple-900 font-bold">The 3 AM Calls</h3>
+                        <p class="text-[10px] text-center text-gray-500 mt-1 italic">"Talking about everything and nothing."</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SCENE 7: THE ENCHANTED CASTLE -->
+            <section id="scene-7" class="scene relative w-screen h-screen flex-shrink-0 flex items-center justify-between px-6 md:px-24 bg-gradient-to-r from-[#0c0316] to-[#12031a] overflow-hidden z-20">
+                <div class="grid grid-cols-1 md:grid-cols-2 w-full max-w-6xl items-center gap-12 z-20">
+                    <div class="space-y-6 opacity-0 transform translate-y-10" id="scene7-text">
+                        <span class="px-3 py-1 rounded-full bg-yellow-500/20 border border-yellow-500/40 text-xs text-yellow-300 uppercase tracking-widest font-semibold inline-block"><i class="fa-solid fa-key mr-1.5"></i> The Destination</span>
+                        <h2 class="text-5xl md:text-7xl font-fairytale text-yellow-300 gold-glow">The Enchanted Castle</h2>
+                        <p class="text-xl md:text-2xl font-serif-elegant text-purple-200 italic">
+                            "After all this magical journey..."
+                        </p>
+                        <p class="text-lg md:text-xl text-purple-300 leading-relaxed">
+                            ...we stand before the ultimate destination. The gates of destiny are slowly parting, inviting us into a beautiful forever.
+                        </p>
+                        <p class="text-sm text-pink-400 italic font-semibold">
+                            💖 Collect the final glowing heart on the castle below to open the gates!
+                        </p>
+                    </div>
+
+                    <!-- Castle Graphics and Final Door Open Action -->
+                    <div class="relative flex flex-col items-center justify-center h-64 md:h-96">
+                        <!-- Custom CSS/SVG Glowing Castle -->
+                        <div id="castle" class="w-64 h-64 md:w-80 md:h-80 bg-gradient-to-t from-purple-950/40 to-pink-900/10 rounded-full border border-pink-500/30 flex items-center justify-center p-4 relative magic-glow transition duration-700">
+                            <!-- Castle silhouette icon -->
+                            <i class="fa-solid fa-fort-awesome text-7xl md:text-9xl text-pink-400/80 filter drop-shadow-[0_0_20px_rgba(244,63,94,0.6)]"></i>
+                            
+                            <!-- Glowing door path overlay -->
+                            <div id="castle-gate-light" class="absolute bottom-6 w-12 h-16 bg-yellow-300 rounded-t-full filter blur-md opacity-20 animate-pulse transition duration-500"></div>
+                        </div>
+
+                        <!-- COLLECTABLE HEART 3 -->
+                        <div id="collect-heart-3" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 rounded-full bg-yellow-500/20 border border-yellow-500/60 flex items-center justify-center cursor-pointer transition transform scale-100 hover:scale-125 z-30 group" onclick="collectHeart(3)">
+                            <i class="fa-solid fa-heart text-3xl text-yellow-400 pulse-heart"></i>
+                            <span class="absolute -top-10 text-xs text-yellow-300 bg-black/50 px-2 py-1 rounded border border-yellow-500/30 whitespace-nowrap">Gather last heart!</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FINAL SCENE: THE PROPOSAL & SCREEN OF LOVE -->
+            <section id="scene-final" class="scene relative w-screen h-screen flex-shrink-0 flex flex-col justify-center items-center px-6 text-center bg-gradient-to-b from-[#12031a] via-[#05010a] to-[#010005] overflow-hidden z-20">
+                <!-- Glowing Lanterns overlay -->
+                <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,rgba(244,63,94,0.12),transparent_70%)]"></div>
+
+                <div class="max-w-3xl z-20 space-y-8" id="final-proposal-area">
+                    <!-- Cinematic presentation lines, progressively revealed -->
+                    <div class="space-y-4">
+                        <h1 class="text-6xl md:text-8xl font-fairytale text-pink-300 gold-glow leading-tight tracking-wide opacity-0 transform translate-y-8" id="propose-line-1">
+                            Nishaa...
+                        </h1>
+                        <p class="text-2xl md:text-4xl font-serif-elegant italic text-purple-100 opacity-0 transform translate-y-8 animate-pulse" id="propose-line-2">
+                            "I loved every single step of this digital fairytale."
+                        </p>
+                        <!-- Stylized love letter rollout -->
+                        <div class="opacity-0 transform translate-y-8 max-w-xl mx-auto glassmorphism p-6 rounded-2xl border border-pink-500/20 text-purple-200 text-sm md:text-base leading-relaxed space-y-3 shadow-inner" id="propose-line-3">
+                            <p class="font-semibold text-pink-300">My Dearest Princess Nishaa,</p>
+                            <p>You entered my world like a sudden, dazzling shower of stardust. From our silly midnight chats to the beautiful way you smile, every small thing about you has completely captured my heart. I love you more than all the stars in the night sky.</p>
+                            <p class="text-xs text-purple-400 italic">Stories are always better when the princess is right here.</p>
+                        </div>
+                    </div>
+
+                    <!-- Lock / Unlock check: Nishaa must gather all hearts first! -->
+                    <div id="locked-proposal" class="glassmorphism p-4 rounded-xl border border-pink-500/30 text-purple-300 text-sm max-w-sm mx-auto animate-pulse">
+                        <i class="fa-solid fa-lock text-pink-400 mr-2"></i> Please scroll back and complete all 3 side quests to reveal the proposal!
+                    </div>
+
+                    <!-- Yes / No Proposal buttons with runaway "No" button mechanics -->
+                    <div id="proposal-actions" class="hidden opacity-0 scale-90 transition-all duration-700 relative w-full h-24 flex items-center justify-center gap-4">
+                        <button id="yes-btn" onclick="revealProposalAcceptance('Yes')" class="relative px-8 py-4 bg-gradient-to-r from-pink-600 to-rose-500 hover:from-pink-500 hover:to-rose-400 rounded-full text-white text-lg font-bold shadow-2xl magic-glow transform hover:scale-110 active:scale-95 transition duration-300">
+                            Yes! ❤️
+                        </button>
+                        <button id="no-btn" onmouseover="runawayNoButton()" ontouchstart="runawayNoButton()" onclick="handleNoButtonClick()" class="px-8 py-4 bg-slate-800 hover:bg-slate-700 rounded-full text-purple-300 text-lg font-semibold transition duration-200 shadow-md">
+                            No 💔
+                        </button>
+                    </div>
+                </div>
+
+                <!-- SUCCESS SCREEN (Triggered after acceptance click) -->
+                <div id="success-screen" class="hidden absolute inset-0 bg-[#05010a]/95 flex flex-col justify-center items-center p-6 z-30 transition-opacity duration-1000 opacity-0">
+                    <div class="w-32 h-32 rounded-full bg-pink-500/20 border border-pink-500 flex items-center justify-center text-pink-500 text-6xl mb-6 pulse-heart magic-glow">
+                        <i class="fa-solid fa-heart"></i>
+                    </div>
+                    
+                    <h2 class="text-5xl md:text-7xl font-fairytale text-pink-300 gold-glow mb-4">Yay! ❤️</h2>
+                    <p class="text-xl md:text-2xl text-purple-100 max-w-md font-serif-elegant italic mb-8">
+                        "I was hoping you'd say yes! You've officially made me the happiest storyteller in the land."
+                    </p>
+
+                    <div class="flex flex-col items-center gap-3">
+                        <!-- Redirect Button -->
+                        <a id="whatsapp-call-link" href="#" target="_blank" class="px-8 py-4 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-400 hover:to-emerald-500 rounded-full text-white font-semibold text-lg shadow-lg flex items-center gap-3 transform hover:scale-105 active:scale-95 transition duration-300">
+                            <i class="fa-brands fa-whatsapp text-2xl"></i> Click to Start Our Call ❤️
+                        </a>
+                        <button onclick="restartAdventure()" class="px-6 py-2 bg-purple-900/60 hover:bg-purple-800 rounded-full text-purple-300 text-sm font-semibold transition border border-purple-500/30 flex items-center gap-2 mt-4 active:scale-95">
+                            <i class="fa-solid fa-arrows-rotate animate-spin-slow"></i> Restart Adventure
+                        </button>
+                        <span id="sheet-status" class="text-xs text-purple-300 animate-pulse italic mt-2">Sending stardust confirmation...</span>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- HERO PRINCESS CHARACTER (NISHA) -->
+        <!-- Fixed viewport princess styled on z-10 behind interface layers to prevent mouse interruptions -->
+        <div id="character-wrapper" class="fixed bottom-12 left-1/4 md:left-1/3 -translate-x-1/2 z-10 pointer-events-none transition duration-300 transform scale-50 md:scale-75">
+            <div class="relative">
+                <div class="absolute -inset-4 rounded-full bg-pink-500/20 blur-xl opacity-75 animate-pulse"></div>
+                <img id="princess-nisha" src="https://i.postimg.cc/vHbC1CqK/pngwing-com.png" alt="Nishaa Character" class="h-48 md:h-64 w-auto filter drop-shadow-[0_10px_15px_rgba(236,72,153,0.5)] transition duration-150">
+            </div>
+        </div>
+
+    </div>
+
+    <!-- SECRET BYPASS CODE GLASS MODAL -->
+    <div id="secret-modal" class="fixed inset-0 z-50 bg-black/85 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="glassmorphism max-w-sm w-full p-6 rounded-2xl text-center border border-purple-500/30 magic-glow relative">
+            <button onclick="closeSecretModal()" class="absolute top-3 right-3 text-purple-300 hover:text-white transition">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <i class="fa-solid fa-wand-magic-sparkles text-yellow-300 text-3xl mb-3 animate-pulse"></i>
+            <h3 class="font-fairytale text-3xl text-pink-300 mb-2 gold-glow">Magical Shortcut</h3>
+            <p class="text-xs text-purple-200 mb-4">Enter the secret stardust code to obtain all Memory Hearts instantly!</p>
+            <input id="bypass-code-input" type="password" maxlength="6" placeholder="••••" class="w-full bg-purple-950/40 text-purple-100 rounded-lg px-3 py-2 border border-purple-500/30 text-center focus:outline-none focus:border-pink-500 text-sm font-semibold tracking-widest mb-4">
+            <button onclick="checkBypassCode()" class="w-full px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold rounded-lg text-xs hover:from-purple-500 hover:to-pink-500 transition active:scale-95">Unlock Fairytale ✨</button>
+        </div>
+    </div>
+
+    <!-- SECRET PHOTO ZOOM LIGHTBOX MODAL -->
+    <div id="photo-zoom-modal" class="fixed inset-0 z-50 bg-black/95 flex flex-col items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+        <button onclick="closeZoomModal()" class="absolute top-6 right-6 text-purple-300 hover:text-white transition text-3xl">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <div class="max-w-2xl w-full p-2 bg-white rounded-xl shadow-2xl overflow-hidden text-gray-800">
+            <img id="zoom-modal-img" src="" class="w-full max-h-[60vh] object-contain rounded-t-lg bg-[#0e071e]">
+            <div class="p-4 text-center">
+                <h3 id="zoom-modal-title" class="font-fairytale text-4xl text-indigo-950 font-bold mb-1">Image Title</h3>
+                <p id="zoom-modal-desc" class="text-sm font-medium text-gray-600 font-serif-elegant italic">Detailed message caption...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- CORE INTERACTION JAVASCRIPT -->
+    <script>
+        // ==========================================
+        // EASY EDIT CUSTOMIZATION CONFIG BLOCK
+        // Feel free to modify any text, images or URLs below!
+        // ==========================================
+        const CONFIG = {
+            // Your deployed Google Apps Script URL to record responses
+            appsScriptUrl: "https://script.google.com/macros/s/AKfycbwsOa9azPFOHY8sxOvniwpBN0fXuuNsPeeTkGv11kikcI5FiIxRxT0In6AZWqLt3UiZ/exec",
+            
+            // Customize your WhatsApp call direct redirection link
+            whatsappUrl: "https://wa.me/?text=Yes!+I+would+love+to+video+call+you+right+now+❤️",
+
+            // Customize Game Quest Text Alerts
+            sparksQuestWinText: "Amazing! Level 1 completed! Heart 1 Gathered 💖",
+            melodyQuestWinText: "You remembered the tune perfectly! Heart 2 Gathered 🌸",
+            mazeQuestWinText: "Cosmic Portals Aligned! Heart 3 Gathered 🔮"
+        };
+
+        // State tracking
+        let state = {
+            audioPlaying: false,
+            heartsCollected: [false, false, false],
+            scrollProgress: 0,
+            activeScene: 0,
+            
+            // Game 1 stats
+            sparkScore: 0,
+            
+            // Game 2 (Melody Memory) parameters - CHANGED: Sequence is now longer (6 notes)
+            melodySequence: [0, 1, 2, 1, 0, 2], 
+            playerSequence: [],
+            isShowingSequence: false,
+
+            // Game 3 rotation tracking
+            portalRotation: 0
+        };
+
+        // DOM elements
+        const loader = document.getElementById('loader');
+        const unlockBtn = document.getElementById('unlock-btn');
+        const audioToggleBtn = document.getElementById('audio-toggle');
+        const musicIcon = document.getElementById('music-icon');
+        const scrollContainer = document.getElementById('scroll-container');
+        const storyboard = document.getElementById('story-wrapper');
+        const princess = document.getElementById('princess-nisha');
+        const characterWrapper = document.getElementById('character-wrapper');
+        const photoModal = document.getElementById('photo-zoom-modal');
+        const secretModal = document.getElementById('secret-modal');
+
+        // AUDIO ENGINE
+        let audioCtx = null;
+        let ambientSynthInterval = null;
+
+        function initSynth() {
+            if (audioCtx) return;
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+
+        function playSparkleSound() {
+            if (!state.audioPlaying || !audioCtx) return;
+            const now = audioCtx.currentTime;
+            for (let i = 0; i < 5; i++) {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                const freqs = [523.25, 587.33, 659.25, 783.99, 880.00, 1046.50];
+                osc.frequency.setValueAtTime(freqs[Math.floor(Math.random() * freqs.length)] * 1.5, now + (i * 0.08));
+                gain.gain.setValueAtTime(0.12, now + (i * 0.08));
+                gain.gain.exponentialRampToValueAtTime(0.001, now + (i * 0.08) + 0.6);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(now + (i * 0.08));
+                osc.stop(now + (i * 0.08) + 0.7);
+            }
+        }
+
+        function playChordPad() {
+            if (!state.audioPlaying || !audioCtx) return;
+            const now = audioCtx.currentTime;
+            const chords = [
+                [174.61, 220.00, 261.63, 329.63], 
+                [130.81, 196.00, 246.94, 329.63], 
+                [146.83, 220.00, 293.66, 349.23], 
+                [196.00, 246.94, 293.66, 392.00]  
+            ];
+            const selectedChord = chords[Math.floor(Math.random() * chords.length)];
+            selectedChord.forEach(freq => {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                const filter = audioCtx.createBiquadFilter();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(freq, now);
+                filter.type = 'lowpass';
+                filter.frequency.setValueAtTime(400, now);
+                filter.frequency.exponentialRampToValueAtTime(800, now + 1.5);
+                filter.Q.setValueAtTime(1, now);
+                gain.gain.setValueAtTime(0.0, now);
+                gain.gain.linearRampToValueAtTime(0.08, now + 1.5);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 5.5);
+                osc.connect(filter);
+                filter.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(now);
+                osc.stop(now + 6);
+            });
+        }
+
+        function playGameTone(index) {
+            if (!audioCtx) return;
+            const now = audioCtx.currentTime;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            const notes = [261.63, 329.63, 392.00, 523.25];
+            osc.frequency.setValueAtTime(notes[index] || 440, now);
+            gain.gain.setValueAtTime(0.15, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(now);
+            osc.stop(now + 0.6);
+        }
+
+        function toggleAudio() {
+            initSynth();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            state.audioPlaying = !state.audioPlaying;
+            if (state.audioPlaying) {
+                musicIcon.className = "fa-solid fa-volume-high text-lg animate-pulse";
+                audioToggleBtn.classList.add("bg-pink-900/60");
+                playSparkleSound();
+                playChordPad();
+                ambientSynthInterval = setInterval(playChordPad, 5000);
+            } else {
+                musicIcon.className = "fa-solid fa-volume-xmark text-lg";
+                audioToggleBtn.classList.remove("bg-pink-900/60");
+                clearInterval(ambientSynthInterval);
+            }
+        }
+
+        // ENTRANCE GAME TRIGGERS
+        unlockBtn.addEventListener('click', () => {
+            initSynth();
+            state.audioPlaying = true;
+            musicIcon.className = "fa-solid fa-volume-high text-lg animate-pulse";
+            audioToggleBtn.classList.add("bg-pink-900/60");
+            playSparkleSound();
+            playChordPad();
+            ambientSynthInterval = setInterval(playChordPad, 5000);
+
+            gsap.to(loader, {
+                opacity: 0,
+                duration: 1,
+                onComplete: () => {
+                    loader.style.display = 'none';
+                    document.body.style.overflowY = 'scroll';
+                    initGSAP();
+                    showCustomToast("💫 Welcome Princess Nishaa! Scroll down to guide your journey.");
+                }
+            });
+        });
+
+        audioToggleBtn.addEventListener('click', toggleAudio);
+
+
+        // MINI GAME 1: DRIFTING CHAT SPARKS
+        function startSparksMinigame() {
+            const startBtn = document.getElementById('start-sparks-btn');
+            startBtn.classList.add('hidden');
+            state.sparkScore = 0;
+            document.getElementById('spark-count').innerText = 0;
+
+            const messages = [
+                "Hey Princess! ✨",
+                "Delivered 11:11 PM 💌",
+                "How was your day? 😊",
+                "Always thinking of you! ❤️"
+            ];
+
+            messages.forEach((msg, index) => {
+                setTimeout(() => {
+                    createFloatingSparkBubble(msg);
+                }, index * 1200);
+            });
+        }
+
+        function createFloatingSparkBubble(text) {
+            const container = document.getElementById('sparks-game-area');
+            const bubble = document.createElement('div');
+            bubble.className = "absolute glassmorphism px-3 py-1.5 rounded-full text-xs font-semibold border border-pink-500/40 text-pink-100 cursor-pointer transition shadow-md whitespace-nowrap z-30 pointer-events-auto";
+            bubble.style.touchAction = "manipulation";
+            bubble.innerText = text;
+            
+            const startX = Math.random() * (container.clientWidth - 100);
+            const startY = container.clientHeight + 20;
+            bubble.style.left = `${startX}px`;
+            bubble.style.top = `${startY}px`;
+
+            container.appendChild(bubble);
+
+            gsap.to(bubble, {
+                y: - (container.clientHeight + 60),
+                x: (Math.random() - 0.5) * 80,
+                duration: 4.5,
+                ease: "none",
+                onComplete: () => {
+                    bubble.remove();
+                }
+            });
+
+            bubble.addEventListener('click', () => {
+                playGameTone(state.sparkScore % 4);
+                state.sparkScore++;
+                document.getElementById('spark-count').innerText = state.sparkScore;
+                
+                gsap.to(bubble, {
+                    scale: 1.4,
+                    opacity: 0,
+                    duration: 0.2,
+                    onComplete: () => { bubble.remove(); }
+                });
+
+                const rect = bubble.getBoundingClientRect();
+                spawnInteractBurst(rect.left, rect.top, 10);
+
+                if (state.sparkScore >= 4) {
+                    showCustomToast(CONFIG.sparksQuestWinText);
+                    const claimBtn = document.getElementById('collect-heart-1');
+                    claimBtn.classList.remove('hidden');
+                    gsap.to(claimBtn, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out" });
+                }
+            });
+        }
+
+
+        // MINI GAME 2: FLOWER SEQUENCE MEMORY
+        function startGardenMelodyQuest() {
+            if (state.isShowingSequence) return;
+            state.playerSequence = [];
+            state.isShowingSequence = true;
+            document.getElementById('seq-remaining').innerText = state.melodySequence.length;
+
+            let delay = 300;
+            state.melodySequence.forEach((flowerIndex, i) => {
+                setTimeout(() => {
+                    flashFlower(flowerIndex);
+                }, delay);
+                delay += 800;
+            });
+
+            setTimeout(() => {
+                state.isShowingSequence = false;
+                showCustomToast("👉 Your turn! Tap the flowers in the exact 6-note sequence.");
+            }, delay);
+        }
+
+        function flashFlower(index) {
+            const flowerEl = document.getElementById(`game-flower-${index}`);
+            if (!flowerEl) return;
+            playGameTone(index);
+            gsap.to(flowerEl, {
+                backgroundColor: "rgba(236, 72, 153, 0.5)",
+                borderColor: "#f472b6",
+                scale: 1.05,
+                duration: 0.3,
+                yoyo: true,
+                repeat: 1
+            });
+        }
+
+        function handleFlowerClick(index) {
+            if (state.isShowingSequence) return;
+            
+            flashFlower(index);
+            state.playerSequence.push(index);
+
+            const step = state.playerSequence.length - 1;
+            document.getElementById('seq-remaining').innerText = state.melodySequence.length - state.playerSequence.length;
+
+            if (state.playerSequence[step] !== state.melodySequence[step]) {
+                showCustomToast("❌ Wrong melody pattern! Tap 'Watch & Listen' to try again.");
+                state.playerSequence = [];
+                document.getElementById('seq-remaining').innerText = "--";
+                return;
+            }
+
+            if (state.playerSequence.length === state.melodySequence.length) {
+                showCustomToast(CONFIG.melodyQuestWinText);
+                collectHeart(2); // Win heart 2
+            }
+        }
+
+
+        // MINI GAME 3: THE PORTAL ALIGNMENT LABYRINTH
+        function rotateMazePortal(direction) {
+            state.portalRotation += direction * 30;
+            const outer = document.getElementById('outer-portal');
+            gsap.to(outer, { rotation: state.portalRotation, duration: 0.3 });
+            playGameTone(2);
+        }
+
+        function alignPortalConfirm() {
+            const angleNormalized = Math.abs(state.portalRotation) % 360;
+            if (angleNormalized === 0 || angleNormalized === 180) {
+                showCustomToast(CONFIG.mazeQuestWinText);
+                const h2 = document.getElementById('collect-heart-2');
+                gsap.to(h2, { scale: 1, duration: 0.5, ease: "bounce.out" });
+            } else {
+                showCustomToast("❌ Portal not aligned yet! Rotate and match again.");
+            }
+        }
+
+
+        // BACKGROUND CANVAS & FIREFLIES MECHANICS
+        const canvas = document.getElementById('magicCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let petals = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Particle {
+            constructor() { this.reset(); }
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2.5 + 0.5;
+                this.speedX = Math.random() * 0.8 - 0.4;
+                this.speedY = Math.random() * -0.5 - 0.2;
+                this.alpha = Math.random() * 0.5 + 0.3;
+                this.decay = Math.random() * 0.005 + 0.001;
+                this.color = Math.random() > 0.5 ? '#f472b6' : '#fef08a';
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.y < 0) this.reset();
+                this.alpha -= this.decay;
+                if (this.alpha <= 0) this.reset();
+            }
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
+                ctx.shadowBlur = 8;
+                ctx.shadowColor = this.color;
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        class FallingPetal {
+            constructor() { this.reset(); }
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = -20;
+                this.size = Math.random() * 6 + 4;
+                this.speedY = Math.random() * 1.5 + 0.5;
+                this.speedX = Math.random() * 1 - 0.5;
+                this.angle = Math.random() * Math.PI;
+                this.rotationSpeed = Math.random() * 0.02 - 0.01;
+                this.color = `rgba(244, 114, 182, ${Math.random() * 0.4 + 0.3})`;
+            }
+            update() {
+                this.y += this.speedY;
+                this.x += this.speedX + Math.sin(this.y / 30) * 0.5;
+                this.angle += this.rotationSpeed;
+                if (this.y > canvas.height) this.reset();
+            }
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.angle);
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.ellipse(0, 0, this.size, this.size / 2, 0, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        for (let i = 0; i < 45; i++) particles.push(new Particle());
+        for (let i = 0; i < 20; i++) petals.push(new FallingPetal());
+
+        function animateCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => { p.update(); p.draw(); });
+            petals.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animateCanvas);
+        }
+        animateCanvas();
+
+        function spawnInteractBurst(x, y, count = 15) {
+            for (let i = 0; i < count; i++) {
+                setTimeout(() => {
+                    const p = new Particle();
+                    p.x = x + (Math.random() * 60 - 30);
+                    p.y = y + (Math.random() * 60 - 30);
+                    p.speedY = Math.random() * -3 - 1;
+                    p.speedX = Math.random() * 4 - 2;
+                    p.alpha = 1;
+                    p.color = '#fb7185';
+                    particles.push(p);
+                }, i * 20);
+            }
+        }
+
+
+        // GSAP PARALLAX HORIZONTAL SCROLL ENGINES
+        function initGSAP() {
+            gsap.registerPlugin(ScrollTrigger);
+            const totalWidth = storyboard.scrollWidth - window.innerWidth;
+
+            gsap.to(storyboard, {
+                x: -totalWidth,
+                ease: "none",
+                scrollTrigger: {
+                    trigger: scrollContainer,
+                    pin: false,
+                    scrub: 1.2,
+                    start: "top top",
+                    end: "bottom bottom",
+                    onUpdate: (self) => {
+                        handlePrincessWalk(self);
+                    }
+                }
+            });
+
+            gsap.to("#scene1-text", { opacity: 1, y: 0, duration: 1.5, delay: 0.5 });
+            
+            ScrollTrigger.create({
+                trigger: scrollContainer,
+                start: "top top",
+                end: "bottom bottom",
+                onUpdate: (self) => {
+                    const progress = self.progress;
+                    
+                    if (progress > 0.08 && progress < 0.25) {
+                        gsap.to("#scene2-text", { opacity: 1, y: 0, duration: 0.8 });
+                    }
+                    if (progress > 0.32 && progress < 0.48) {
+                        gsap.to("#scene4-text", { opacity: 1, y: 0, duration: 0.8 });
+                    }
+                    if (progress > 0.45 && progress < 0.65) {
+                        const paragraphs = document.querySelectorAll('.scene5-p');
+                        paragraphs.forEach((p, index) => {
+                            gsap.to(p, { opacity: 1, delay: index * 0.4, duration: 1 });
+                        });
+                    }
+                    if (progress > 0.72 && progress < 0.88) {
+                        gsap.to("#scene7-text", { opacity: 1, y: 0, duration: 0.8 });
+                    }
+                }
+            });
+        }
+
+        // PRINCESS SWAY AND MOVEMENT FACING ENGINE
+        let lastScrollProg = 0;
+        let walkTween = null;
+
+        function handlePrincessWalk(self) {
+            const currentProg = self.progress;
+            const scrollingDown = currentProg > lastScrollProg;
+            lastScrollProg = currentProg;
+
+            if (scrollingDown) {
+                gsap.to(princess, { scaleX: 1, duration: 0.2 });
+            } else {
+                gsap.to(princess, { scaleX: -1, duration: 0.2 });
+            }
+
+            if (!walkTween || !walkTween.isActive()) {
+                walkTween = gsap.to(princess, {
+                    y: -15,
+                    rotation: scrollingDown ? 5 : -5,
+                    duration: 0.25,
+                    yoyo: true,
+                    repeat: 1,
+                    ease: "sine.inOut"
+                });
+            }
+        }
+
+
+        // HEART COLLECTION ACTIONS
+        function collectHeart(number) {
+            if (state.heartsCollected[number - 1]) return;
+            state.heartsCollected[number - 1] = true;
+
+            const targetHeart = document.getElementById(`collect-heart-${number}`);
+            playSparkleSound();
+            
+            if (targetHeart) {
+                gsap.to(targetHeart, {
+                    scale: 0,
+                    opacity: 0,
+                    duration: 0.5,
+                    ease: "back.in",
+                    onComplete: () => { targetHeart.style.display = 'none'; }
+                });
+            }
+
+            // Fill meter icon
+            const meterHeart = document.getElementById(`meter-heart-${number}`);
+            meterHeart.className = "fa-solid fa-heart text-pink-500 animate-bounce text-lg";
+
+            if (targetHeart) {
+                const rect = targetHeart.getBoundingClientRect();
+                spawnInteractBurst(rect.left + 30, rect.top + 30, 25);
+            }
+
+            // Lock / Unlock check: Nishaa must gather all hearts first!
+            if (state.heartsCollected[0] && state.heartsCollected[1] && state.heartsCollected[2]) {
+                const castle = document.getElementById('castle');
+                const gate = document.getElementById('castle-gate-light');
+                castle.classList.add('border-yellow-400', 'magic-glow');
+                gsap.to(gate, { opacity: 0.9, scale: 2.2, duration: 1.5 });
+                
+                document.getElementById('locked-proposal').classList.add('hidden');
+                document.getElementById('proposal-actions').classList.remove('hidden');
+                gsap.to('#proposal-actions', { opacity: 1, scale: 1, duration: 1, delay: 0.5 });
+                
+                gsap.to('#propose-line-1', { opacity: 1, y: 0, duration: 1.2, delay: 0.2 });
+                gsap.to('#propose-line-2', { opacity: 1, y: 0, duration: 1.2, delay: 1 });
+                gsap.to('#propose-line-3', { opacity: 1, y: 0, duration: 1.2, delay: 1.8 });
+            }
+        }
+
+
+        // PHOTO ZOOM MODAL ENGINE
+        function zoomPolaroid(src, title, description) {
+            const zoomImg = document.getElementById('zoom-modal-img');
+            document.getElementById('zoom-modal-title').innerText = title;
+            document.getElementById('zoom-modal-desc').innerText = description;
+            
+            zoomImg.src = src;
+            zoomImg.onerror = function() {
+                if(src.includes('img1')) zoomImg.src = 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=800&auto=format&fit=crop';
+                else if(src.includes('img2')) zoomImg.src = 'https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=800&auto=format&fit=crop';
+                else zoomImg.src = 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=800&auto=format&fit=crop';
+            };
+
+            photoModal.classList.remove('pointer-events-none');
+            gsap.to(photoModal, { opacity: 1, duration: 0.3 });
+            playSparkleSound();
+        }
+
+        function closeZoomModal() {
+            gsap.to(photoModal, {
+                opacity: 0, duration: 0.2, onComplete: () => {
+                    photoModal.classList.add('pointer-events-none');
+                }
+            });
+        }
+
+
+        // RUNAWAY NO BUTTON LOGIC (Delightful proposal interaction)
+        function runawayNoButton() {
+            const noBtn = document.getElementById('no-btn');
+            const parent = document.getElementById('proposal-actions');
+            
+            // Randomly translate No button within parent bounds
+            const maxX = parent.clientWidth / 2 - 20;
+            const maxY = 40;
+            
+            const randomX = (Math.random() - 0.5) * maxX * 1.5;
+            const randomY = (Math.random() - 0.5) * maxY * 1.5;
+            
+            gsap.to(noBtn, {
+                x: randomX,
+                y: randomY,
+                duration: 0.2,
+                ease: "power2.out"
+            });
+            
+            // Play playful sound
+            playGameTone(1);
+        }
+
+        function handleNoButtonClick() {
+            // If they somehow tap No, transform it playfully to Yes
+            showCustomToast("Aha! Almost caught me! But deep down, I know your heart says Yes! 😉");
+            revealProposalAcceptance('Yes');
+        }
+
+
+        // PROPOSAL REDIRECT & SHEET EVENT TRIGGER
+        function revealProposalAcceptance(userChoice) {
+            const successScreen = document.getElementById('success-screen');
+            successScreen.classList.remove('hidden');
+            
+            playSparkleSound();
+            if (audioCtx) {
+                setTimeout(playChordPad, 100);
+                setTimeout(playChordPad, 500);
+            }
+
+            // Record response to your Spreadsheet matching headers: Timestamp, Event, Value, Device
+            sendResponseToSpreadsheet(userChoice);
+
+            gsap.to(successScreen, {
+                opacity: 1,
+                duration: 1.2,
+                onComplete: () => {
+                    triggerEndlessFireworks();
+                }
+            });
+        }
+
+        // Asynchronous Spreadsheet Post Call (SAFE & FAULT TOLERANT)
+        async function sendResponseToSpreadsheet(responseVal) {
+            const statusEl = document.getElementById('sheet-status');
+            const deviceType = window.innerWidth < 768 ? "Mobile App Sandbox" : "Desktop Immersive Viewer";
+            
+            // Build the exact payload for Google Sheets matching headers: TimestampEventValueDevice
+            const payload = {
+                name: "Princess Nishaa",
+                response: responseVal,
+                device: deviceType
+            };
+
+            // Dynamic video call link placement
+            document.getElementById('whatsapp-call-link').href = CONFIG.whatsappUrl;
+
+            try {
+                const response = await fetch(CONFIG.appsScriptUrl, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                statusEl.innerText = "Stardust response recorded successfully! Ready to chat? 💫";
+                statusEl.className = "text-xs text-green-400 font-semibold mt-2";
+            } catch (err) {
+                console.error("Payload recording error:", err);
+                statusEl.innerText = "Redirection path loaded! Click to proceed ❤️";
+            }
+        }
+
+        function triggerEndlessFireworks() {
+            let interval = setInterval(() => {
+                if (!state.audioPlaying) return;
+                spawnInteractBurst(Math.random() * canvas.width, canvas.height - 80, 20);
+                playSparkleSound();
+            }, 550);
+            setTimeout(() => clearInterval(interval), 15000);
+        }
+
+
+        // SECRET BYPASS SYSTEM MODALS
+        function openSecretModal() {
+            secretModal.classList.remove('pointer-events-none');
+            gsap.to(secretModal, { opacity: 1, duration: 0.3 });
+        }
+
+        function closeSecretModal() {
+            gsap.to(secretModal, {
+                opacity: 0, duration: 0.2, onComplete: () => {
+                    secretModal.classList.add('pointer-events-none');
+                }
+            });
+        }
+
+        function checkBypassCode() {
+            const code = document.getElementById('bypass-code-input').value;
+            if (code === '1234') {
+                closeSecretModal();
+                showCustomToast("✨ Cosmic cheat activated! Instantly obtaining all hearts.");
+                
+                // Set state directly
+                state.heartsCollected = [true, true, true];
+                
+                // Instantly update HUD meter
+                for(let i=1; i<=3; i++){
+                    const mh = document.getElementById(`meter-heart-${i}`);
+                    mh.className = "fa-solid fa-heart text-pink-500 animate-bounce text-lg";
+                }
+
+                // Solve/Glow the labyrinth
+                const glow1 = document.getElementById('maze-path-glow');
+                const glow2 = document.getElementById('maze-path-glow-2');
+                const glow3 = document.getElementById('maze-path-glow-3');
+                if (glow1) glow1.setAttribute('stroke-dashoffset', '0');
+                if (glow2) glow2.setAttribute('stroke-dashoffset', '0');
+                if (glow3) glow3.setAttribute('stroke-dashoffset', '0');
+
+                // Unlock Proposal Screen & Castle Doors
+                const castle = document.getElementById('castle');
+                const gate = document.getElementById('castle-gate-light');
+                if (castle) castle.classList.add('border-yellow-400', 'magic-glow');
+                if (gate) gsap.to(gate, { opacity: 0.9, scale: 2.2, duration: 1.5 });
+                
+                // Hide floating level collectables
+                const ch1 = document.getElementById('collect-heart-1');
+                const ch2 = document.getElementById('collect-heart-2');
+                const ch3 = document.getElementById('collect-heart-3');
+                if (ch1) ch1.style.display = 'none';
+                if (ch2) ch2.style.display = 'none';
+                if (ch3) ch3.style.display = 'none';
+
+                document.getElementById('locked-proposal').classList.add('hidden');
+                document.getElementById('proposal-actions').classList.remove('hidden');
+                gsap.to('#proposal-actions', { opacity: 1, scale: 1, duration: 1, delay: 0.5 });
+                
+                gsap.to('#propose-line-1', { opacity: 1, y: 0, duration: 1.2, delay: 0.2 });
+                gsap.to('#propose-line-2', { opacity: 1, y: 0, duration: 1.2, delay: 1 });
+                gsap.to('#propose-line-3', { opacity: 1, y: 0, duration: 1.2, delay: 1.8 });
+
+                spawnInteractBurst(window.innerWidth / 2, window.innerHeight / 2, 40);
+                playSparkleSound();
+            } else {
+                showCustomToast("❌ The stardust code is incorrect. Try again!");
+            }
+            document.getElementById('bypass-code-input').value = "";
+        }
+
+
+        // RESTART GAME ENGINE
+        function restartAdventure() {
+            // Reset state
+            state.heartsCollected = [false, false, false];
+            state.sparkScore = 0;
+            state.playerSequence = [];
+            state.isShowingSequence = false;
+            state.portalRotation = 0;
+            
+            // Reset HUD meter hearts
+            for (let i = 1; i <= 3; i++) {
+                const mh = document.getElementById(`meter-heart-${i}`);
+                mh.className = "fa-regular fa-heart text-pink-400";
+            }
+            
+            // Reset Game 1 (Sparks)
+            const startSparksBtn = document.getElementById('start-sparks-btn');
+            startSparksBtn.classList.remove('hidden');
+            document.getElementById('spark-count').innerText = "0";
+            const claimH1 = document.getElementById('collect-heart-1');
+            claimH1.classList.add('hidden');
+            claimH1.style.display = '';
+            gsap.set(claimH1, { scale: 0, opacity: 0 });
+
+            // Reset Game 2 (Melody)
+            document.getElementById('seq-remaining').innerText = "--";
+
+            // Reset Game 3 (Maze)
+            const btn1 = document.getElementById('maze-step-1');
+            const btn2 = document.getElementById('maze-step-2');
+            const btn3 = document.getElementById('maze-step-3');
+            if (btn1) {
+                btn1.disabled = false;
+                btn1.className = "px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-xs font-semibold transition active:scale-95 text-white";
+                btn1.innerHTML = "Tap Pathway 1 🌌";
+            }
+            if (btn2) {
+                btn2.disabled = true;
+                btn2.className = "px-3 py-1.5 rounded-lg bg-gray-700/60 text-gray-400 text-xs font-semibold cursor-not-allowed";
+                btn2.innerHTML = "Tap Pathway 2 🔮";
+            }
+            if (btn3) {
+                btn3.disabled = true;
+                btn3.className = "px-3 py-1.5 rounded-lg bg-gray-700/60 text-gray-400 text-xs font-semibold cursor-not-allowed";
+                btn3.innerHTML = "Connect to Heart ❤️";
+            }
+            
+            const glow1 = document.getElementById('maze-path-glow');
+            const glow2 = document.getElementById('maze-path-glow-2');
+            const glow3 = document.getElementById('maze-path-glow-3');
+            if (glow1) glow1.setAttribute('stroke-dashoffset', '600');
+            if (glow2) glow2.setAttribute('stroke-dashoffset', '500');
+            if (glow3) glow3.setAttribute('stroke-dashoffset', '400');
+            
+            const claimH2 = document.getElementById('collect-heart-2');
+            if (claimH2) {
+                claimH2.style.display = '';
+                gsap.set(claimH2, { scale: 0 });
+            }
+
+            // Reset Castle & Proposal area
+            const castle = document.getElementById('castle');
+            if (castle) castle.classList.remove('border-yellow-400', 'magic-glow');
+            const gate = document.getElementById('castle-gate-light');
+            if (gate) gsap.set(gate, { opacity: 0.2, scale: 1 });
+            
+            const claimH3 = document.getElementById('collect-heart-3');
+            if (claimH3) {
+                claimH3.style.display = '';
+                gsap.set(claimH3, { scale: 1, opacity: 1 });
+            }
+
+            document.getElementById('locked-proposal').classList.remove('hidden');
+            document.getElementById('proposal-actions').classList.add('hidden');
+            gsap.set('#proposal-actions', { opacity: 0, scale: 0.9 });
+            gsap.set(['#propose-line-1', '#propose-line-2', '#propose-line-3'], { opacity: 0, y: 8 });
+
+            // Hide Success Screen
+            const successScreen = document.getElementById('success-screen');
+            successScreen.classList.add('hidden');
+            gsap.set(successScreen, { opacity: 0 });
+
+            // Lock scroll and show loader again
+            document.body.style.overflowY = 'hidden';
+            const loader = document.getElementById('loader');
+            loader.style.display = 'flex';
+            gsap.set(loader, { opacity: 1 });
+
+            // Reset scroll trigger and viewport position smoothly
+            window.scrollTo({ top: 0 });
+            if (ScrollTrigger) {
+                ScrollTrigger.refresh();
+            }
+            
+            showCustomToast("🔄 Fairytale reset! Ready to start again.");
+        }
+
+
+        // CUSTOM TOAST MESSAGE POPUPS
+        function showCustomToast(text) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = "glassmorphism px-4 py-2.5 rounded-2xl border border-pink-500/30 text-pink-100 text-xs font-bold flex items-center gap-2 shadow-lg transition-all duration-300 transform translate-x-12 opacity-0 pointer-events-auto";
+            toast.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles text-yellow-300"></i> ${text}`;
+            container.appendChild(toast);
+
+            gsap.to(toast, {
+                opacity: 1,
+                x: 0,
+                duration: 0.4,
+                onComplete: () => {
+                    setTimeout(() => {
+                        gsap.to(toast, {
+                            opacity: 0,
+                            x: 30,
+                            duration: 0.3,
+                            onComplete: () => { toast.remove(); }
+                        });
+                    }, 4000);
+                }
+            });
+        }
+
+
+        // TOUCH GESTURES, CURSOR PARTICLES
+        window.addEventListener('mousemove', (e) => {
+            if (Math.random() > 0.85) createMagicSparkle(e.clientX, e.clientY);
+        });
+
+        window.addEventListener('touchstart', (e) => {
+            const touch = e.touches[0];
+            createMagicSparkle(touch.clientX, touch.clientY);
+        });
+
+        function createMagicSparkle(x, y) {
+            const sparkle = document.createElement('div');
+            sparkle.className = "sparkle-trail pointer-events-none";
+            const isHeart = Math.random() > 0.4;
+            sparkle.innerHTML = isHeart ? "<i class='fa-solid fa-heart text-pink-400 text-xs'></i>" : "<i class='fa-solid fa-star text-yellow-300 text-[10px]'></i>";
+            sparkle.style.left = `${x}px`;
+            sparkle.style.top = `${y}px`;
+            sparkle.style.position = 'fixed';
+            document.body.appendChild(sparkle);
+
+            gsap.to(sparkle, {
+                y: -60 - Math.random() * 40,
+                x: (Math.random() - 0.5) * 50,
+                opacity: 0,
+                scale: 0.4,
+                duration: 1.2 + Math.random() * 0.8,
+                onComplete: () => sparkle.remove()
+            });
+        }
+    </script>
+</body>
+</html>
